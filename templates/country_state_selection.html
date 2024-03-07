@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country and State Selection</title>
+    <style>
+        .logout-link {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Country and State Selection</h1>
+    <form method="POST">
+        {{ form.csrf_token }}
+        <p>{{ form.country.label }}<br>{{ form.country }}</p>
+        <p>{{ form.state.label }}<br>{{ form.state }}</p>
+        <p>{{ form.submit }}</p>
+        <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
+    </form>
+</body>
+</html>
