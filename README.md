@@ -1,1 +1,8 @@
-# My Project 
+![Screenshot 2024-03-07 235024](https://github.com/Risu999222/PyFlaskProject/assets/162625358/57d6b3c0-2227-46aa-9cb2-edef563301a7)
+![Screenshot 2024-03-07 235054](https://github.com/Risu999222/PyFlaskProject/assets/162625358/a222ca32-f3a1-4653-8084-39d7e754a751)
+![Screenshot 2024-03-07 235113](https://github.com/Risu999222/PyFlaskProject/assets/162625358/f0d3a5b0-fda0-4f13-a956-a19dd51d012d)
+![Screenshot 2024-03-07 235129](https://github.com/Risu999222/PyFlaskProject/assets/162625358/6d6a3400-fbea-4ee0-b1a4-dd74803e39f3)
+![Screenshot 2024-03-07 235151](https://github.com/Risu999222/PyFlaskProject/assets/162625358/bacac261-dfdc-46ec-9c8e-fb858c4221b1)
+![Screenshot 2024-03-07 235200](https://github.com/Risu999222/PyFlaskProject/assets/162625358/17f59c26-0a12-47c6-8a4b-af617ad02604)
+![Screenshot 2024-03-07 235217](https://github.com/Risu999222/PyFlaskProject/assets/162625358/76a7d9bd-2f28-4c1b-9ef4-3d11054d7906)
+![Screenshot 2024-03-07 235227](https://github.com/Risu999222/PyFlaskProject/assets/162625358/155337b3-27c7-43c8-a398-5fdbbfbb179b)
