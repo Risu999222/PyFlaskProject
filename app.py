@@ -1,8 +1,9 @@
-from flask import Flask, render_template, redirect, url_for, request, flash, session
+import requests
+from flask import Flask, render_template, redirect, url_for, request, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from forms import LoginForm, RegisterForm
 from flask_wtf import FlaskForm
-from wtforms import IntegerField, SubmitField, SelectField, StringField, PasswordField
+from wtforms import IntegerField, SubmitField, SelectField, StringField, PasswordField, FloatField
 from wtforms.validators import NumberRange, DataRequired, Email, EqualTo
 
 app = Flask(__name__)
@@ -18,26 +19,14 @@ class User(db.Model):
     password = db.Column(db.String(60), nullable=False)
 
 class CountryStateForm(FlaskForm):
-    country = SelectField('Country', choices=[('USA', 'USA'), ('Canada', 'Canada')], validators=[DataRequired()])
-    state = SelectField('State', choices=[('New York', 'New York'), ('California', 'California')], validators=[DataRequired()])
+    country = SelectField('Country', validators=[DataRequired()])
+    state = SelectField('State', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class MultiplicationForm(FlaskForm):
-    number1 = IntegerField('Number 1', validators=[NumberRange(min=0)])
-    number2 = IntegerField('Number 2', validators=[NumberRange(min=0)])
+    number1 = FloatField('Number 1', validators=[NumberRange(min=-1000000, max=1000000)])
+    number2 = FloatField('Number 2', validators=[NumberRange(min=-1000000, max=1000000)])
     submit = SubmitField('Multiply')
-
-class RegisterForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Sign Up')
-
-class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    submit = SubmitField('Login')
 
 @app.route('/')
 def index():
@@ -77,15 +66,38 @@ def dashboard():
 @app.route('/country_state_selection', methods=['GET', 'POST'])
 def country_state_selection():
     form = CountryStateForm()
+    response = requests.get('https://countriesnow.space/api/v0.1/countries/states')
+    if response.status_code == 200:
+        data = response.json()
+        countries = [(country['name'], country['name']) for country in data['data']]
+        form.country.choices = countries
     if form.validate_on_submit():
         country = form.country.data
         state = form.state.data
         return redirect(url_for('country_state_result', country=country, state=state))
     return render_template('country_state_selection.html', form=form)
 
+@app.route('/get_states', methods=['POST'])
+def get_states():
+    country = request.form.get('country')
+    response = requests.get('https://countriesnow.space/api/v0.1/countries/states')
+    if response.status_code == 200:
+        data = response.json()
+        states_data = {}
+        for country_data in data['data']:
+            if country_data['name'] == country:
+                states_data['states'] = country_data['states']
+                break
+        else:
+            return jsonify({'error': True, 'msg': 'Country not found'})
+        return jsonify({'error': False, 'msg': 'States retrieved', 'data': states_data})
+    else:
+        return jsonify({'error': True, 'msg': 'Failed to retrieve states'})
 
-@app.route('/country_state_result/<country>/<state>')
-def country_state_result(country, state):
+@app.route('/country_state_result', methods=['POST'])
+def country_state_result():
+    country = request.form.get('country')
+    state = request.form.get('state')
     return render_template('country_state_result.html', country=country, state=state)
 
 
@@ -97,9 +109,11 @@ def multiplication_page():
         return redirect(url_for('multiplication_result', result=result))
     return render_template('multiplication_page.html', form=form)
 
-@app.route('/multiplication_result/<int:result>')
+@app.route('/multiplication_result/<result>')
 def multiplication_result(result):
-    return render_template('multiplication_result.html', result=result)
+    result_float = float(result)
+    result_formatted = str(result_float).rstrip('0').rstrip('.') if '.' in result else result
+    return render_template('multiplication_result.html', result=result_formatted)
 
 @app.route('/logout')
 def logout():

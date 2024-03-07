@@ -11,15 +11,42 @@
             right: 10px;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#country').change(function() {
+                var country = $(this).val();
+                $.ajax({
+                    url: '/get_states',
+                    type: 'POST',
+                    data: {country: country},
+                    success: function(response) {
+                        if (!response.error) {
+                            var options = '<option value="">Select State</option>'; // Add an empty option
+                            $.each(response.data.states, function(index, state) {
+                                options += '<option value="' + state.name + '">' + state.name + '</option>';
+                            });
+                            $('#state').html(options);
+                        } else {
+                            console.error('Error:', response.msg);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
 </head>
-<body>
+    <body>
     <h1>Country and State Selection</h1>
-    <form method="POST">
+    <form method="POST" action="/country_state_result">
         {{ form.csrf_token }}
-        <p>{{ form.country.label }}<br>{{ form.country }}</p>
-        <p>{{ form.state.label }}<br>{{ form.state }}</p>
+        <p>{{ form.country.label }}<br>{{ form.country(id="country", class="form-control") }}</p>
+        <p>{{ form.state.label }}<br>{{ form.state(id="state", class="form-control") }}</p>
         <p>{{ form.submit }}</p>
         <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
-    </form>
-</body>
+     </form>
+    </body>
 </html>

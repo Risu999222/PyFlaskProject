@@ -16,7 +16,8 @@
     <h1>Country and State Result</h1>
     <p>Selected Country: {{ country }}</p>
     <p>Selected State: {{ state }}</p>
-    <a href="{{ url_for('dashboard') }}">Back to Dashboard</a>
+    <p><a href="{{ url_for('country_state_selection') }}">Back to Country and State selection page</a></p>
+    <p><a href="{{ url_for('dashboard') }}">Back to Dashboard</a></p>
     <a href="{{ url_for('logout') }}" class="logout-link">Logout</a>
 </body>
 </html>
